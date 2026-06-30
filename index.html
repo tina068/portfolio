@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张子庆的个人作品集</title>
+<style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #5B5FEF;
+  --primary-light: #818CF8;
+  --secondary: #8B5CF6;
+  --accent: #C4B5FD;
+  --bg: #FAFAFC;
+  --card-bg: #FFFFFF;
+  --text: #1E1E2E;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.10);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Background texture layer — subtle behind sections */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('bg.webp') center / cover no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ===== Nav ===== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.nav-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 1px;
+  transform: scaleX(0);
+  transition: transform var(--transition);
+}
+.nav-links a:hover, .nav-links a.active { color: var(--primary); }
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+.menu-toggle {
+  display: none;
+  background: none; border: none;
+  cursor: pointer; padding: 4px;
+  color: var(--text);
+}
+
+/* ===== Hero — full background image ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: url('bg.webp') center / cover no-repeat;
+}
+/* Subtle overlay so text remains readable */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.35) 0%,
+    rgba(255,255,255,0.55) 30%,
+    rgba(255,255,255,0.55) 70%,
+    rgba(250,250,252,0.75) 100%
+  );
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+}
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(91,95,239,0.12);
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED, #6366F1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 1.1rem;
+  color: #4B5563;
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+.hero-arrow {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s ease-in-out infinite;
+  color: var(--primary);
+  opacity: 0.6;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ===== Section ===== */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  position: relative;
+  z-index: 1;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.section-label {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Article Cards (推文) ===== */
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.article-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+.article-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.article-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.article-card .platform {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.article-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(91,95,239,0.08);
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition);
+  width: fit-content;
+}
+.article-link:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ===== Carousel ===== */
+.carousel {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.carousel-main {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: #f0f0f5;
+  overflow: hidden;
+  cursor: pointer;
+}
+.carousel-main img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.35s ease;
+  opacity: 1;
+}
+.carousel-main img.fade-out {
+  opacity: 0;
+}
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  color: var(--primary);
+}
+.carousel-btn:hover { background: #fff; box-shadow: var(--shadow-md); }
+.carousel-btn.prev { left: 12px; }
+.carousel-btn.next { right: 12px; }
+
+.carousel-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+.carousel-counter {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.carousel-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+.carousel-dot.active {
+  background: var(--primary);
+  width: 24px;
+  border-radius: 4px;
+}
+.carousel-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===== Gallery Grid (海报传单 & 其他设计) ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+.gallery-item {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  aspect-ratio: 4 / 3;
+}
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.06);
+}
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(30,30,46,0.7) 0%, transparent 60%);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  opacity: 0;
+  transition: var(--transition);
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ===== Video Cards ===== */
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+.video-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.video-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+.video-card video {
+  width: 100%;
+  display: block;
+  background: #000;
+}
+.video-info {
+  padding: 16px 20px;
+}
+.video-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ===== Lightbox ===== */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15,15,25,0.92);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.lightbox.active { display: flex; }
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  cursor: default;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+.lightbox-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.22); }
+
+/* ===== Footer ===== */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .menu-toggle { display: block; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 56px; left: 0; right: 0;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(16px);
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .section { padding: 56px 16px; }
+  .videos-grid { grid-template-columns: 1fr; }
+  .articles-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  .carousel-main { aspect-ratio: 4 / 3; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">Ziqing's Portfolio</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#articles">推文</a></li>
+      <li><a href="#posters">海报传单</a></li>
+      <li><a href="#ppt">PPT</a></li>
+      <li><a href="#other">其他设计</a></li>
+      <li><a href="#videos">视频</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero — full background image -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🎨 作品集</div>
+    <h1>设计作品集</h1>
+    <p>热爱视觉表达，用设计传递想法。<br>这里收录了我的推文、海报、PPT 及其他创意作品。</p>
+  </div>
+  <div class="hero-arrow">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+  </div>
+</section>
+
+<!-- 推文 Section (keep card layout) -->
+<section class="section" id="articles">
+  <div class="section-header">
+    <div class="section-label">Articles</div>
+    <h2 class="section-title">推文作品</h2>
+  </div>
+  <div class="articles-grid">
+    <div class="article-card">
+      <div class="article-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>招新宣传</h3>
+      <div class="platform">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8.69 3.46C4.75 5.16 1.36 8.72 2.3 13.23c.56 2.69 2.45 4.99 5.18 5.87.46.15.63.31.63.62 0 .3-.19.87-.42 1.25s-.42.72-.42.81c0 .13.19.17.42.09 1.14-.42 2.84-1.53 3.51-2.27.27-.29.62-.49.99-.49h.94c4.24 0 7.77-3.36 7.77-7.5 0-3.63-2.98-6.63-6.95-7.34-1.25-.23-3.83-.3-5.26-.21z"/></svg>
+        微信公众号
+      </div>
+      <a href="https://mp.weixin.qq.com/s/UXPeX5vqfFxd0X_BqMX5iA" target="_blank" rel="noopener" class="article-link">阅读原文 <span>→</span></a>
+    </div>
+    <div class="article-card">
+      <div class="article-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>班会回顾</h3>
+      <div class="platform">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8.69 3.46C4.75 5.16 1.36 8.72 2.3 13.23c.56 2.69 2.45 4.99 5.18 5.87.46.15.63.31.63.62 0 .3-.19.87-.42 1.25s-.42.72-.42.81c0 .13.19.17.42.09 1.14-.42 2.84-1.53 3.51-2.27.27-.29.62-.49.99-.49h.94c4.24 0 7.77-3.36 7.77-7.5 0-3.63-2.98-6.63-6.95-7.34-1.25-.23-3.83-.3-5.26-.21z"/></svg>
+        微信公众号
+      </div>
+      <a href="https://mp.weixin.qq.com/s/vS9_CrKH8DSk8UqTZ6Zcdw" target="_blank" rel="noopener" class="article-link">阅读原文 <span>→</span></a>
+    </div>
+    <div class="article-card">
+      <div class="article-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>企业参访宣传</h3>
+      <div class="platform">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8.69 3.46C4.75 5.16 1.36 8.72 2.3 13.23c.56 2.69 2.45 4.99 5.18 5.87.46.15.63.31.63.62 0 .3-.19.87-.42 1.25s-.42.72-.42.81c0 .13.19.17.42.09 1.14-.42 2.84-1.53 3.51-2.27.27-.29.62-.49.99-.49h.94c4.24 0 7.77-3.36 7.77-7.5 0-3.63-2.98-6.63-6.95-7.34-1.25-.23-3.83-.3-5.26-.21z"/></svg>
+        微信公众号
+      </div>
+      <a href="https://mp.weixin.qq.com/s/TJPGaNnFqtQwIRVu436iEw" target="_blank" rel="noopener" class="article-link">阅读原文 <span>→</span></a>
+    </div>
+    <div class="article-card">
+      <div class="article-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>项目汇报总结</h3>
+      <div class="platform">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8.69 3.46C4.75 5.16 1.36 8.72 2.3 13.23c.56 2.69 2.45 4.99 5.18 5.87.46.15.63.31.63.62 0 .3-.19.87-.42 1.25s-.42.72-.42.81c0 .13.19.17.42.09 1.14-.42 2.84-1.53 3.51-2.27.27-.29.62-.49.99-.49h.94c4.24 0 7.77-3.36 7.77-7.5 0-3.63-2.98-6.63-6.95-7.34-1.25-.23-3.83-.3-5.26-.21z"/></svg>
+        微信公众号
+      </div>
+      <a href="https://mp.weixin.qq.com/s/-Bj2stdWq-eTVpYWRCelUA" target="_blank" rel="noopener" class="article-link">阅读原文 <span>→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 海报传单 -->
+<section class="section" id="posters">
+  <div class="section-header">
+    <div class="section-label">Posters & Flyers</div>
+    <h2 class="section-title">海报传单</h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item" onclick="openLightbox('海报传单/招新传单.png')">
+      <img src="海报传单/招新传单.png" alt="招新传单" loading="lazy">
+      <div class="gallery-overlay"><span>招新传单</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('海报传单/探鱼进校园.png')">
+      <img src="海报传单/探鱼进校园.png" alt="探鱼进校园" loading="lazy">
+      <div class="gallery-overlay"><span>探鱼进校园</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('海报传单/科技展海报.jpg')">
+      <img src="海报传单/科技展海报.jpg" alt="科技展海报" loading="lazy">
+      <div class="gallery-overlay"><span>科技展海报</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('海报传单/心想事橙.png')">
+      <img src="海报传单/心想事橙.png" alt="心想事橙" loading="lazy">
+      <div class="gallery-overlay"><span>心想事橙</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('海报传单/访谈邀请海报.jpg')">
+      <img src="海报传单/访谈邀请海报.jpg" alt="访谈邀请海报" loading="lazy">
+      <div class="gallery-overlay"><span>访谈邀请海报</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PPT (carousel) -->
+<section class="section" id="ppt">
+  <div class="section-header">
+    <div class="section-label">Presentations</div>
+    <h2 class="section-title">PPT 作品</h2>
+  </div>
+  <div class="carousel" id="carousel-ppt"></div>
+</section>
+
+<!-- 其他设计 -->
+<section class="section" id="other">
+  <div class="section-header">
+    <div class="section-label">Other Designs</div>
+    <h2 class="section-title">其他设计</h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item" onclick="openLightbox('其他设计/剪刀.png')">
+      <img src="其他设计/剪刀.png" alt="剪刀" loading="lazy">
+      <div class="gallery-overlay"><span>剪刀</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/石头.png')">
+      <img src="其他设计/石头.png" alt="石头" loading="lazy">
+      <div class="gallery-overlay"><span>石头</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/布.png')">
+      <img src="其他设计/布.png" alt="布" loading="lazy">
+      <div class="gallery-overlay"><span>布</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/功能牌1.png')">
+      <img src="其他设计/功能牌1.png" alt="功能牌1" loading="lazy">
+      <div class="gallery-overlay"><span>功能牌 1</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/功能牌2.png')">
+      <img src="其他设计/功能牌2.png" alt="功能牌2" loading="lazy">
+      <div class="gallery-overlay"><span>功能牌 2</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/功能牌3.png')">
+      <img src="其他设计/功能牌3.png" alt="功能牌3" loading="lazy">
+      <div class="gallery-overlay"><span>功能牌 3</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/手持KT版1.png')">
+      <img src="其他设计/手持KT版1.png" alt="手持KT版1" loading="lazy">
+      <div class="gallery-overlay"><span>手持KT版 1</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/手持KT版2.png')">
+      <img src="其他设计/手持KT版2.png" alt="手持KT版2" loading="lazy">
+      <div class="gallery-overlay"><span>手持KT版 2</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/手持KT版3.png')">
+      <img src="其他设计/手持KT版3.png" alt="手持KT版3" loading="lazy">
+      <div class="gallery-overlay"><span>手持KT版 3</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('其他设计/茶小樱IP.png')">
+      <img src="其他设计/茶小樱IP.png" alt="茶小樱IP" loading="lazy">
+      <div class="gallery-overlay"><span>茶小樱 IP</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 视频 Section -->
+<section class="section" id="videos">
+  <div class="section-header">
+    <div class="section-label">Videos</div>
+    <h2 class="section-title">视频作品</h2>
+  </div>
+  <div class="videos-grid">
+    <div class="video-card">
+      <video controls preload="metadata">
+        <source src="视频/我在深大的一天.mp4" type="video/mp4">
+        您的浏览器不支持视频播放
+      </video>
+      <div class="video-info"><h3>我在深大的一天</h3></div>
+    </div>
+    <div class="video-card">
+      <video controls preload="metadata">
+        <source src="视频/科技展活动回顾.mp4" type="video/mp4">
+        您的浏览器不支持视频播放
+      </video>
+      <div class="video-info"><h3>科技展活动回顾</h3></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2025 Portfolio · 个人作品集</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="关闭">✕</button>
+  <img src="" alt="" id="lightboxImg" onclick="event.stopPropagation()">
+</div>
+
+<script>
+// ===== PPT auto-play carousel =====
+const pptItems = [
+  { src: 'PPT/IPP大赛.png', name: 'IPP大赛' },
+  { src: 'PPT/政协提案.png', name: '政协提案' },
+  { src: 'PPT/校园营销比赛.png', name: '校园营销比赛' },
+  { src: 'PPT/案例分析大赛.png', name: '案例分析大赛' }
+];
+
+let pptState = { index: 0, items: pptItems };
+let pptTimer = null;
+
+function buildPptCarousel() {
+  const container = document.getElementById('carousel-ppt');
+  if (!container || !pptItems.length) return;
+
+  container.innerHTML = `
+    <div class="carousel-main" id="ppt-main">
+      <img src="${pptItems[0].src}" alt="${pptItems[0].name}" id="carousel-img-ppt" onclick="openLightbox('${pptItems[0].src}')">
+      <button class="carousel-btn prev" data-dir="-1" aria-label="上一张">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="carousel-btn next" data-dir="1" aria-label="下一张">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="carousel-info-bar">
+      <span class="carousel-name" id="carousel-name-ppt">${pptItems[0].name}</span>
+      <div class="carousel-dots" id="carousel-dots-ppt">
+        ${pptItems.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="第${i+1}张"></button>`).join('')}
+      </div>
+      <span class="carousel-counter" id="carousel-counter-ppt">1 / ${pptItems.length}</span>
+    </div>
+  `;
+
+  // Click delegation
+  container.addEventListener('click', function(e) {
+    const btn = e.target.closest('.carousel-btn');
+    const dot = e.target.closest('.carousel-dot');
+    if (btn) { goToPptSlide(pptState.index + parseInt(btn.dataset.dir)); resetTimer(); }
+    if (dot) { goToPptSlide(parseInt(dot.dataset.idx)); resetTimer(); }
+  });
+
+  // Pause auto-play on hover
+  const main = document.getElementById('ppt-main');
+  main.addEventListener('mouseenter', stopTimer);
+  main.addEventListener('mouseleave', startTimer);
+
+  // Touch swipe
+  let startX = 0;
+  main.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  main.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      goToPptSlide(pptState.index + (diff > 0 ? 1 : -1));
+      resetTimer();
+    }
+  });
+
+  startTimer();
+}
+
+function goToPptSlide(idx) {
+  const len = pptState.items.length;
+  const newIdx = ((idx % len) + len) % len;
+  if (newIdx === pptState.index) return;
+  pptState.index = newIdx;
+
+  const img = document.getElementById('carousel-img-ppt');
+  const nameEl = document.getElementById('carousel-name-ppt');
+  const counterEl = document.getElementById('carousel-counter-ppt');
+  const dots = document.getElementById('carousel-dots-ppt').children;
+
+  img.classList.add('fade-out');
+  setTimeout(() => {
+    img.src = pptState.items[newIdx].src;
+    img.alt = pptState.items[newIdx].name;
+    img.onclick = function() { openLightbox(pptState.items[newIdx].src); };
+    img.classList.remove('fade-out');
+  }, 180);
+
+  nameEl.textContent = pptState.items[newIdx].name;
+  counterEl.textContent = (newIdx + 1) + ' / ' + len;
+  Array.from(dots).forEach((d, i) => d.classList.toggle('active', i === newIdx));
+}
+
+function startTimer() { stopTimer(); pptTimer = setInterval(() => goToPptSlide(pptState.index + 1), 3000); }
+function stopTimer() { clearInterval(pptTimer); pptTimer = null; }
+function resetTimer() { startTimer(); }
+
+// ===== Init =====
+buildPptCarousel();
+
+// ===== Mobile menu =====
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+// ===== Active nav highlight =====
+const sections = document.querySelectorAll('section[id], .hero[id]');
+const navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navAs.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+
+// ===== Lightbox =====
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+
+</body>
+</html>
